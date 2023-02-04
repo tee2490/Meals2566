@@ -1,6 +1,5 @@
-import React, { useState,useContext } from "react";
-import {FlatList, StyleSheet, SafeAreaView, StatusBar, View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import React, { useContext } from "react";
+import {FlatList,TouchableOpacity } from "react-native";
 import { RestaurantInfoCard } from "../components/restaurant-info-card.component";
 import styled from "styled-components/native";
 import { Spacer } from "../../../components/spacer/spacer.component";
@@ -8,10 +7,6 @@ import { SafeArea } from "../../../components/utility/safe-area.component";
 import { RestaurantsContext } from "../../../services/restaurants/restaurants.context";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import { Search } from "../components/search.component";
-
-const SearchContainer = styled.View`
-padding: ${(props) => props.theme.space[3]};
-`;
 
 const RestaurantList = styled(FlatList).attrs({
   contentContainerStyle: {
@@ -29,10 +24,7 @@ const LoadingContainer = styled.View`
   left: 50%;
 `;
 
-export const RestaurantsScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const onChangeSearch = (query) => setSearchQuery(query);
+export const RestaurantsScreen = ({navigation}) => {
 
   const { isLoading, error, restaurants } = useContext(RestaurantsContext);
   console.log(error);
@@ -50,9 +42,11 @@ export const RestaurantsScreen = () => {
          data={restaurants}
          renderItem={({ item }) => {
            return (
-             <Spacer position="bottom" size="large">
+             <TouchableOpacity onPress={()=>navigation.navigate("RestaurantDetail",{restaurant:item})}>
+              <Spacer position="bottom" size="large">
                <RestaurantInfoCard restaurant={item} />
              </Spacer>
+             </TouchableOpacity>
            );
          }}
         keyExtractor={(item,index) => index}
